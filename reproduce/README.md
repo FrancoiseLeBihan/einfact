@@ -23,7 +23,7 @@ stated seeds and do not relax a tolerance after viewing a result.
 | Script | Required hardware | Why |
 |---|---|---|
 | `claim1_theorem.py` | CPU: AMD EPYC 7543P (32 cores), 128 GB RAM | Tiny synthetic tensors; GPU adds no evidential value. |
-| `claim2_uber_table1.py` | **1× NVIDIA A100 80 GB PCIe**, 32+ CPU cores, 128 GB RAM, CUDA 12.x | The dense 27×7×24×100×100 float32 tensor and several contractions/intermediates must reside in accelerator memory. |
+| `claim2_uber_table1.py` | **2× NVIDIA Tesla T4 (16 GB each)**, 32+ CPU cores, 128 GB RAM, CUDA 12.x | Exact i-mode sharding holds only 50/100 origin cells per GPU; update statistics are aggregated before each factor update. |
 | `claim3_speed.py` | **1× NVIDIA A100 80 GB PCIe**, 32+ CPU cores, 128 GB RAM, CUDA 12.x | Fair wall-clock comparison on six divergences; synchronised GPU timing. |
 | `claim4_models.py` | **1× NVIDIA A100 80 GB PCIe**, 32+ CPU cores, **256 GB RAM**, CUDA 12.x | ICEWS/Uber/WITS sweeps and model contractions. |
 | `claim5_interpretability.py` | **1× NVIDIA A100 80 GB PCIe**, 32+ CPU cores, 128 GB RAM, CUDA 12.x | Fits/extracts Uber spatial-temporal components. |
