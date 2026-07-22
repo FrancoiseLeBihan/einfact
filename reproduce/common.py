@@ -19,9 +19,14 @@ def load(args, expected=None):
     if args.heldout:
         h=np.load(args.heldout, mmap_mode='r'); assert h.dtype==np.bool_ and h.shape==y.shape
     else:
-        # deterministic 5% split; exact experimental heldout indices must override this
-        idx=np.arange(y.size, dtype=np.uint64).reshape(y.shape)
-        h=((idx*11400714819323198485 + args.seed) % 100) < 5
+        # Deterministic 5% split without a 5.8-GB uint64 index tensor.
+        # Exact experimental heldout indices must override this fallback.
+        flat=np.empty(y.size, dtype=np.bool_); block=10_000_000
+        multiplier=np.uint64(11400714819323198485)
+        for start in range(0, y.size, block):
+            ind=np.arange(start, min(start+block,y.size), dtype=np.uint64)
+            flat[start:start+ind.size]=((ind*multiplier + np.uint64(args.seed)) % 100) < 5
+        h=flat.reshape(y.shape)
     return np.asarray(y), np.asarray(h)
 
 def fit(y, heldout, model, shapes, alpha, beta, args):
